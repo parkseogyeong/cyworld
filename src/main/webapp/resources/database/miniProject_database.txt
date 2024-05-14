@@ -1,0 +1,173 @@
+--�쉶�썝�젙蹂�
+drop table mini_member;
+create table mini_member(
+m_id varchar2(50) primary key,
+m_pw varchar2(50) not null,
+m_name varchar2(50) not null,
+m_phone varchar2(13) not null,
+m_email varchar2(50) not null
+);
+
+--�쉶�썝�젙蹂� �뀒�씠釉� �씠誘� �깮�꽦�뻽�쓣 寃쎌슦 �떎�뻾
+alter table mini_member add m_name varchar2(50);
+alter table mini_member modify(m_name not null);
+
+--�쉶�썝�젙蹂� insert
+insert into mini_member values (
+'sky',
+'1234',
+'�씠�젙�썑',
+'010-1234-5675',
+'sky@naver.com'
+);
+insert into mini_member values (
+'ma',
+'1234',
+'留덈룞�꽍',
+'010-9876-5435',
+'ma@crime.com'
+);
+
+--濡쒓렇�씤
+drop table mini_login;
+create table mini_login(
+m_id varchar2(50) primary key,
+m_pw varchar2(50) not null,
+constraint mini_login_fk foreign key(m_id) references mini_member(m_id) on delete cascade
+);
+
+--�솃
+drop table mini_home;
+create table mini_home(
+h_name varchar2(50) not null,
+h_img varchar2(50),
+h_room_img varchar2(50),
+h_content varchar2(100),
+h_title varchar2(50),
+constraint mini_home_fk foreign key(h_name) references mini_member(m_id) on delete cascade
+);
+
+--�솃 insert
+insert into mini_home values (
+'sky',
+'�솃�궗吏�.jpeg',
+'誘몃땲猷�.jpg',
+'�꽦H�꽦l硫�.. 二쎈뒗�꽬r..',
+'�븰援먮씪�뒗 媛릓k... 踰쀬뼱�궃 �꽬r...'
+);
+insert into mini_home values (
+'ma',
+'crimecity.jpg',
+'誘몃땲猷�2.jpg',
+'�뀋�뀖吏� 紐ⓦ뀉 遊꾠뀪�뀪',
+'�뼱 �븘吏� �떛湲��씠�빞'
+);
+
+--�씪珥뚰룊
+drop table mini_ilchon;
+create table mini_ilchon(
+i_content varchar2(100) not null
+);
+
+--�봽濡쒗븘
+drop table mini_profile;
+create table mini_profile(
+p_id varchar2(50) not null,
+p_img varchar2(50),
+p_content varchar2(100),
+constraint mini_profile_fk foreign key(p_id) references mini_member(m_id) on delete cascade
+);
+
+--�봽濡쒗븘 insert
+insert into mini_profile values (
+'sky',
+'lee.jpg',
+'1998�뀈 8�썡 �뼱�뒓�궇 ,<br>�빞援ъ꽑�닔�쓽 �븘�뱾濡� �깭�뼱�궓.<br>2017�뀈 1李� 吏�紐낆쑝濡� �꽖�꽱�뿉 �엯�떒, 洹� �빐 �떊�씤�솗�쓣 �닔�긽.<br>�씠�썑 2022�뀈 怨⑤뱺 湲��윭釉뚯� �떆利똌VP瑜� �닔�긽.<br>2023�떆利� �썑 誘멸뎅�뿉 吏꾩텧�빐 MLB �깒�봽���떆�뒪肄� �옄�씠�뼵痢좎뿉 �엯�떒�븿.'
+);
+insert into mini_profile values (
+'ma',
+'ma.jpg',
+'�꽌�슱湲덉쿇寃쎌같�꽌 媛뺣젰1諛� 洹쇰Т(寃쎌쐞),<br>�옣泥�, 媛뺥빐�긽 泥댄룷.<br>�꽌�슱吏�諛⑷꼍李곗껌 愿묒뿭�닔�궗�� 洹쇰Т,<br>寃쎄컧�쑝濡� �듅吏�.<br>二쇱꽦泥�, 諛깆갹湲� 泥댄룷.'
+);
+
+--�떎�씠�뼱由�
+drop sequence mini_diary_seq;
+create sequence mini_diary_seq;
+
+drop table mini_diary;
+create table mini_diary(
+d_code number(4) primary key,
+d_name varchar2(50) not null,
+d_title varchar2(500) not null,
+d_content varchar2(500) not null,
+d_wdate date not null,
+constraint mini_diary_fk foreign key(d_name) references mini_member(m_id) on delete cascade
+);
+
+--�떎�씠�뼱由� �뙎湲�
+drop sequence diary_reply_seq;
+create sequence diary_reply_seq;
+
+create table diary_reply(
+dr_num number(4) primary key,
+dr_writer varchar2(50) not null,
+dr_content varchar2(500) not null,
+dr_code number(4) not null,
+constraint  diary_reply_fk  foreign key(dr_code) references  mini_diary(d_code) on delete cascade
+);
+
+--�궗吏꾩꺽
+drop sequence mini_photo_seq;
+create sequence mini_photo_seq;
+
+drop table mini_photo;
+create table mini_photo(
+p_code number(4) primary key,
+p_name varchar2(50) not null,
+p_title varchar2(500) not null,
+p_content varchar2(500) not null,
+p_wdate date not null,
+p_img varchar2(50) not null,
+constraint mini_photo_fk foreign key(p_name) references mini_member(m_id) on delete cascade
+);
+
+--�궗吏꾩꺽 �뙎湲�
+drop sequence photo_reply_seq;
+create sequence photo_reply_seq;
+
+create table photo_reply(
+pr_num number(4) primary key,
+pr_writer varchar2(50) not null,
+pr_content varchar2(500) not null,
+pr_code number(4) not null,
+constraint  photo_reply_fk  foreign key(pr_code) references  mini_photo(p_code) on delete cascade
+);
+
+--諛⑸챸濡�
+drop sequence mini_guest_seq;
+create sequence mini_guest_seq;
+
+drop table mini_guest;
+create table mini_guest(
+g_code number(4) primary key,
+g_name varchar2(50) not null,
+g_content varchar2(500) not null,
+g_wdate date not null,
+constraint mini_guest_fk foreign key(g_name) references mini_member(m_id) on delete cascade
+);
+
+--諛⑸챸濡� �뙎湲�
+drop sequence guest_reply_seq;
+create sequence guest_reply_seq;
+
+create table guest_reply(
+gr_num number(4) primary key,
+gr_writer varchar2(50) not null,
+gr_content varchar2(500) not null,
+gr_code number(4) not null,
+constraint  guest_reply_fk  foreign key(gr_code) references  mini_guest(g_code) on delete cascade
+);
+
+
+
+
